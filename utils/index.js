@@ -5,6 +5,7 @@ const generateAuthToken = (userId, role) => {
     const token = jwt.sign({ userId, role}, process.env.JWT_SECRET_KEY, { expiresIn: '24h' });
     return token;
   };
+  
 
 module.exports={
     generateAuthToken

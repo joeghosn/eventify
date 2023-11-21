@@ -5,7 +5,9 @@ const authRoutes = require('./routes/auth.routes');
 const eventsRoutes= require('./routes/events.routes');
 const bookingsRoutes= require('./routes/bookings.routes')
 const favoritesRoutes= require('./routes/favorites.routes')
-const baseUrl= require('./constants/index')
+const baseUrl= require('./constants/index');
+const AppError = require('./utils/AppError');
+const globarErrorHandler=require('./controllers/errors.controller')
 
 const app = express();
 
@@ -27,19 +29,12 @@ app.use(`${baseUrl}/events`, eventsRoutes)
 app.use(`${baseUrl}/bookings`, bookingsRoutes);
 app.use(`${baseUrl}/favorites`, favoritesRoutes);
 //Very important to be place here!
-app.all('*',(req, res)=>{
-    const err= new Error(`Can't find ${req.originalUrl} on this server`)
-    err.status='fail';
-    err.statusCode='404'
+app.all('*',(req, res, next)=>{
+    next(new AppError(`Can't find ${req.originalUrl} on this server`,404))
 })
-app.use((err, req, res, next)=>{
-    err.statusCode= err.statusCode || 500;
-    err.status= err.status || 'error';
-    res.status(err.statusCode).json({
-        status: error.status,
-        message: err.message,
-    });
-})
+
+app.use(globarErrorHandler)
+
 
 const port = 3000;
 app.listen(port, () => {

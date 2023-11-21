@@ -1,9 +1,10 @@
 const { validationResult, Result } = require('express-validator');
 const authService = require('../services/auth.service');
 const {signUpSchema, signInSchema} = require('../schemas/auth');
+const catchAsync = require('../utils/catchAsync');
 
-exports.signUp = async (req, res) => {
-  try {
+exports.signUp = catchAsync( async (req, res) => {
+
     // Validate request data using express-validator
     await Promise.all(signUpSchema.map(validationRule => validationRule.run(req)));
 
@@ -21,19 +22,11 @@ exports.signUp = async (req, res) => {
     const result = await authService.signUp(req.body);
 
     res.status(201).json(result);
-  } catch ({status, message}) {
-
-    // Handle other errors, such as errors from authService.signUp
-    res.status(status | 500).json({
-      message: message | 'error',
-      errors:'Internal Server Error',
-    });
-  }
-};
+ 
+});
 
 
-exports.signIn = async (req, res) => {
-  try {
+exports.signIn = catchAsync(async (req, res) => {
     // Validate request data using express-validator
     await Promise.all(signInSchema.map(validationRule => validationRule.run(req)));
 
@@ -47,12 +40,4 @@ exports.signIn = async (req, res) => {
 
     const result= await authService.signIn(req.body);
     res.status(200).json(result);
-
-
-  } catch (err) {
-    res.status(500).json({
-      message: 'Internal Server Error',
-      errors: err,
-    });
-  }
-};
+});

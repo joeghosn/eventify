@@ -1,7 +1,8 @@
-const bookingsService= require('../services/bookings.service')
+const bookingsService= require('../services/bookings.service');
 
-exports.bookEvent = async (req, res) => {
-    try {
+const catchAsync = require('../utils/catchAsync');
+
+exports.bookEvent = catchAsync( async (req, res) => {
         //The user Id comes from the attached user object to the req after applying checkIfAuthorized middleware
         const userId = req.user.userId;
   
@@ -14,36 +15,20 @@ exports.bookEvent = async (req, res) => {
           status: 'success',
           booking: result
         });
-  
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({
-        status: 'error',
-        message: 'Internal Server Error',
-      });
-    }
-  };
+  });
 
-  exports.getBookings = async (req, res) => {
-    try {
+  exports.getBookings = catchAsync(async (req, res) => {
+ 
       const {userId}= req.user;
       // Call the event service to get events
       const result = await bookingsService.getBookings(userId);
   
       res.status(200).json(result);
-    } catch (err) {
-      const { status, message } = err;
-  
-      res.status(status || 500).json({
-        status: 'fail',
-        message: message || 'Internal Server Error',
-      });
-    }
-  };
+    
+  });
   
   
-  exports.unbookEvent = async (req, res) => {
-    try {
+  exports.unbookEvent = catchAsync(async (req, res) => {
  // Extract the event ID from the route parameters
  const eventId = req.params.id;
     
@@ -56,12 +41,4 @@ exports.bookEvent = async (req, res) => {
           status: 'success',
           message,
         });
-
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({
-        status: 'error',
-        message: 'Internal Server Error',
-      });
-    }
-  };
+  });

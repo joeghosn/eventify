@@ -1,7 +1,8 @@
-const favoritesService= require('../services/favorites.service')
+const favoritesService= require('../services/favorites.service');
+const catchAsync = require('../utils/catchAsync');
 
-exports.favoriteEvent = async (req, res) => {
-  try {
+exports.favoriteEvent =catchAsync( async (req, res) => {
+
   const userId = req.user.userId;
 
   // Extract the event ID from the route parameters
@@ -14,34 +15,18 @@ exports.favoriteEvent = async (req, res) => {
     message,
   });
 
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      status: 'error',
-      message: 'Internal Server Error',
-    });
-  }
-};
 
-exports.getFavorites = async (req, res) => {
-  try {
+});
+
+exports.getFavorites =catchAsync(async (req, res) => {
     const {userId}= req.user;
     // Call the event service to get events
     const result = await favoritesService.getFavorites(userId);
 
     res.status(200).json(result);
-  } catch (err) {
-    const { status, message } = err;
+}) ;
 
-    res.status(status || 500).json({
-      status: 'fail',
-      message: message || 'Internal Server Error',
-    });
-  }
-};
-
-exports.unfavoriteEvent = async (req, res) => {
-  try {
+exports.unfavoriteEvent = catchAsync( async (req, res) => {
     const userId = req.user.userId;
 
     // Extract the event ID from the route parameters
@@ -54,11 +39,5 @@ exports.unfavoriteEvent = async (req, res) => {
       message,
     });
 
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      status: 'error',
-      message: 'Internal Server Error',
-    });
-  }
-};
+ 
+});
