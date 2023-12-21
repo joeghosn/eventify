@@ -16,15 +16,15 @@ exports.createEvent = catchAsync( async (req, res) => {
         }
 
     // Call the event service to create an event
-    const result = await eventService.createEvent(req);
-    res.status(201).json(result);
+    await eventService.createEvent(req);
+    res.redirect('/api/v1/events');
 });
 
 
 exports.getEvents = catchAsync(async (req, res) => {
     // Call the event service to get events
-    const result = await eventService.getEvents(req);
-    res.status(200).json(result);
+    const result=await eventService.getEvents(req);
+    res.render('../views/pages/events',{events: result.data.events, user: req.user});
 });
 
 exports.getEvent = catchAsync( async (req, res) => {
@@ -33,8 +33,9 @@ exports.getEvent = catchAsync( async (req, res) => {
 
     // Call the event service to get a specific event
     const result = await eventService.getEvent(eventId);
+    console.log(result.event)
+    res.render('../views/pages/event',{event: result.event, user: req.user})
 
-    res.status(200).json(result);
 });
 
 exports.deleteEvent = catchAsync( async (req, res) => {
@@ -42,10 +43,8 @@ exports.deleteEvent = catchAsync( async (req, res) => {
     const eventId = req.params.id;
 
     // Call the event service to delete an event
-    const result = await eventService.deleteEvent(eventId);
-
-    res.status(204).json(result);
- 
+   await eventService.deleteEvent(eventId);
+   res.redirect('/api/v1/events');
 });
 
 exports.updateEvent =catchAsync( async (req, res) => {
@@ -72,9 +71,9 @@ exports.updateEventStatus = catchAsync(async (req, res) => {
     const newStatus = req.body.status; // Assuming the new status is provided in the request body
 
     // Call the event service to update the event status
-    const result = await eventService.updateEventStatus(eventId, newStatus);
+   await eventService.updateEventStatus(eventId, newStatus);
+   res.redirect(`/api/v1/events/${eventId}`)
 
-    res.status(200).json(result);
 });
 
 

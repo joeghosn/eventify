@@ -53,6 +53,10 @@ const eventService = {
       if (userRole === 'planner') {
         whereClause.userId = userId;
       }
+
+      if(userRole ==='user'){
+        whereClause.status='approved'
+      }
   
       // Retrieve events from the database based on the where clause
       const events = await Event.findAll({

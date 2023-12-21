@@ -1,4 +1,4 @@
-const { validationResult, Result } = require('express-validator');
+const { validationResult} = require('express-validator');
 const authService = require('../services/auth.service');
 const {signUpSchema, signInSchema} = require('../schemas/auth');
 const catchAsync = require('../utils/catchAsync');
@@ -20,9 +20,11 @@ exports.signUp = catchAsync( async (req, res) => {
 
     // If validation passes, proceed with signUp logic
     const result = await authService.signUp(req.body);
+    res.cookie('token', result.token, {
+      httpOnly: true,
+    })
 
-    res.status(201).json(result);
- 
+    res.redirect('/api/v1/events')
 });
 
 
@@ -39,5 +41,14 @@ exports.signIn = catchAsync(async (req, res) => {
     }
 
     const result= await authService.signIn(req.body);
-    res.status(200).json(result);
+    res.cookie('token', result.token, {
+      httpOnly: true,
+    })
+    res.redirect('/api/v1/events')
+});
+
+exports.logout = catchAsync(async (req, res) => {
+
+  //Clear cookie from the browser
+  res.clearCookie('token').redirect('/api/v1/auth/sign-in');
 });

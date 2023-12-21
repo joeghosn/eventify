@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class=" min-h-screen">
+    <%-include('../components/navigation', {user})%>
+
+    <div class="p-12 relative">
+        <a class="flex items-center space-x-2 absolute top-4 left-12" href="javascript:history.back()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"  viewBox="0 0 448 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+            <span class="font-light">Back</span>
+        </a>
+        <div class="mb-8 flex space-x-4 items-center">
+            <% if (user && (user.userRole === 'admin' || user.userRole === 'planner')) { %>
+                <% let statusColor = ''; %>
+            
+                <% if (event.status === 'pending') { %>
+                    <% statusColor = 'bg-yellow-300'; %>
+                <% } else if (event.status === 'approved') { %>
+                    <% statusColor = 'bg-green-500'; %>
+                <% } else if (event.status === 'rejected') { %>
+                    <% statusColor = 'bg-red-500'; %>
+                <% } %>
+            
+                <span class="<%= statusColor %>  text-white rounded-full mt-1 w-5 h-5 "></span>
+            <% } %>
+            <h1 class="text-3xl font-bold"><%= event.name%></h1>
+            <!-- Actions based on user role -->
+            <% if (user && user.userRole === 'user') { %>
+                <!-- Buttons for user role -->
+                <div class="flex space-x-6 px-8 mt-1">
+                    <%if (event.isFavorited){ %>
+                        <button  id="favoriteButton">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 512 512" style="fill:#EF4444 ">
+                                    <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
+                                  </svg>                              
+                            </span>
+                        </button>
+                        <%
+                    }else{ %>
+                        <button  id="unfavoriteButton">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 512 512" style="fill:#727272 ">
+                                    <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
+                                  </svg>                              
+                            </span>
+                        </button>
+                    <%
+                    }%>
+
+                    <%if (event.isBooked){ %>
+                        <button  id="bookButton" >
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 384 512" style="fill:#3B82F6;">
+                                <path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"/>
+                            </svg>
+                        </span>
+                    </button>
+                        <%
+                    }else{ %>
+                        <button  id="unbookButton" >
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 384 512" style="fill: #727272;">
+                                <path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <%
+                    }%>
+                 
+                 
+                </div>
+                
+            <% } else if (user && user.userRole === 'admin') { %>
+                <!-- Buttons for admin role -->
+                <% if (event.status === 'pending') { %>
+                    <!-- Show buttons only if the status is pending -->
+                    <div class="flex space-x-6 px-8 mt-1">
+                        <button id="approveButton">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 448 512" style="fill: #43FF2F;">
+                                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <button id="rejectButton" >
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 384 512" style="fill: #EF4444;">
+                                    <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                    
+                <% } %>
+            <% } else if (user && user.userRole==='planner') { %>
+                <div class="flex px-4 mt-1">
+                    <button id="deleteButton" >
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" style="fill: #EF4444;" height="16" width="16" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
+                        </span>
+                    </button>
+                </div>
+                <%
+            } %>
+        </div>
+      
+        <div class="flex flex-col space-y-4 mb-8">
+            <div class="flex items-center">
+                <span class="w-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 192 512">
+                        <path d="M48 80a48 48 0 1 1 96 0A48 48 0 1 1 48 80zM0 224c0-17.7 14.3-32 32-32H96c17.7 0 32 14.3 32 32V448h32c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H64V256H32c-17.7 0-32-14.3-32-32z"/>
+                    </svg>
+                </span>
+                <p><%=event.description%></p>
+            </div>
+
+            <div class="flex items-center">
+                <span class="w-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 448 512">
+                        <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 4 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/>
+                    </svg>
+                </span>
+                <% const eventDate = new Date(event.date); %>
+                <% const options = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }; %>
+                <% const formattedDate = eventDate.toLocaleDateString('en-US', options); %>
+            
+                <% const eventTime = new Date(`1970-01-01T${event.time}Z`); %>
+                <% const formattedTime = eventTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' }); %>
+                <p>The event is happening on <%=formattedDate%> at <%=formattedTime%>.</p>
+            </div>
+           <div class="flex items-center">
+            <span class="w-8">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 384 512"><path d="M384 192c0 87.4-117 243-168.3 307.2c-12.3 15.3-35.1 15.3-47.4 0C117 435 0 279.4 0 192C0 86 86 0 192 0S384 86 384 192z"/></svg>
+            </span>
+                <p>This event will take place at <strong><%=event.city%> city</strong>, <strong><%=event.street%> street</strong>, <strong><%=event.building%> building</strong>.</p>
+           </div>
+           <div class="flex items-center">
+                <span class="w-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>
+                </span>
+                <p>You must be <strong><%=event.minimumAge%></strong> and must wear <strong><%=event.dressCode?event.dressCode:""%></strong> to be able to attend.</p>
+           </div>
+            <div class="flex items-center">
+                <span class="w-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512"><path d="M64 64C28.7 64 0 92.7 0 128V384c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H64zm48 160H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16zM96 336c0-8.8 7.2-16 16-16H464c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16zM376 160h80c13.3 0 24 10.7 24 24v48c0 13.3-10.7 24-24 24H376c-13.3 0-24-10.7-24-24V184c0-13.3 10.7-24 24-24z"/></svg>
+                </span>
+                <p>The price of a ticket is <strong>$<%=event.price%></strong> per person.</p>
+            </div>
+            <p class="font-semibold text-lg">Hurry up, there are only <%= event.seats%> seats available!</p>
+        </div>
+      
+    </div>
+
+    <script>
+        //Get eventId from URL
+        const baseUrl = `http://localhost:3000/api/v1`;
+        function getEventIdFromUrl() {
+        const url = window.location.href;
+        const parts = url.split('/');
+        const eventIdIndex = parts.indexOf('events') + 1;
+
+        if (eventIdIndex > 0 && eventIdIndex < parts.length) {
+            return parts[eventIdIndex];
+        }
+
+        return null;
+        }
+        const eventId = getEventIdFromUrl();
+        // Get references to buttons
+        const favoriteButton = document.getElementById('favoriteButton')
+        const unfavoriteButton = document.getElementById('unfavoriteButton')
+        const bookButton= document.getElementById('bookButton')
+        const unbookButton= document.getElementById('unbookButton')
+        const approveButton = document.getElementById('approveButton');
+        const rejectButton= document.getElementById('rejectButton');
+        const deleteButton= document.getElementById('deleteButton');
+
+
+        
+        // Event listeners
+        async function favorite() {
+            try {
+                await fetch(`${baseUrl}/favorites/${eventId}`, {
+                    method: 'POST',
+                    credentials: 'include', // Include credentials (cookies) in the request
+                });
+            window.location.href = `/api/v1/events/${eventId}`;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        async function unfavorite() {
+    try {
+        await fetch(`${baseUrl}/favorites/${eventId}`, {
+            method: 'DELETE',
+            credentials: 'include', // Include credentials (cookies) in the request
+        });
+
+        // Wait for the fetch request to complete before changing the location
+        window.location.href = `/api/v1/events/${eventId}`;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function book() {
+    try {
+        await fetch(`${baseUrl}/bookings/${eventId}`, {
+            method: 'POST',
+            credentials: 'include', // Include credentials (cookies) in the request
+        });
+
+        // Wait for the fetch request to complete before changing the location
+        window.location.href = `/api/v1/events/${eventId}`;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+        
+        async function unbook() {
+            try {
+                await fetch(`${baseUrl}/bookings/${eventId}`, {
+                    method: 'DELETE',
+                    credentials: 'include', // Include credentials (cookies) in the request
+                });
+                window.location.href = `/api/v1/events/${eventId}`;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        async function remove() {
+            try {
+                await fetch(`${baseUrl}/events/${eventId}`, {
+                    method: 'DELETE',
+                    credentials: 'include', // Include credentials (cookies) in the request
+                });
+                window.location.href = `/api/v1/events`;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        async function approve() {
+            try {
+                await fetch(`${baseUrl}/events/${eventId}/status`, {
+                    method: 'PATCH',
+                    credentials: 'include', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        status: 'approved', // Set the desired status
+                    }),
+                });
+                window.location.href = `/api/v1/events/${eventId}`;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        async function reject() {
+            try {
+                await fetch(`${baseUrl}/events/${eventId}/status`, {
+                    method: 'PATCH', 
+                    credentials: 'include', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        status: 'rejected', // Set the desired status
+                    }),
+                });
+                window.location.href = `/api/v1/events/${eventId}`;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+// Event listeners
+if (bookButton) {
+    bookButton.addEventListener('click',unbook);
+}
+
+if (unbookButton) {
+    unbookButton.addEventListener('click',book);
+}
+
+if (favoriteButton) {
+    favoriteButton.addEventListener('click', unfavorite);
+}
+
+if (unfavoriteButton) {
+    unfavoriteButton.addEventListener('click', favorite);
+}
+
+if (approveButton) {
+    approveButton.addEventListener('click', approve);
+}
+
+if (rejectButton) {
+    rejectButton.addEventListener('click', reject);
+}
+
+if (deleteButton) {
+    deleteButton.addEventListener('click', remove);
+}
+
+    </script>
+</body>
+
+</html>

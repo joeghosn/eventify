@@ -77,6 +77,22 @@ const Event = sequelize.define(
       defaultValue: 'pending',
       allowNull: false,
     },
+    date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    time: {
+      type: DataTypes.TIME,
+      allowNull: false,
+    },
+    isFavorited: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    isBooked: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     userId: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -89,4 +105,3 @@ const Event = sequelize.define(
 Event.belongsTo(User, { foreignKey: 'userId', as: 'host' });
 
 module.exports = Event;
-

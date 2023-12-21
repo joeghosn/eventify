@@ -23,11 +23,13 @@ const authService = {
         token,
       };
     } catch (err) {
-      throw  new Error(err)
+      throw {
+        status: 'error',
+        message: 'Unable to create user. Try again later',
+      };
     }
   },
   signIn: async (userData) => {
-    console.log('sign-in')
     try {
       const { email, password } = userData;
 
@@ -61,7 +63,7 @@ const authService = {
       console.error('Error creating user:', error.message); 
       throw {
         status: 'error',
-        message: 'User creation failed',
+        message: 'Invalid email or password',
       };
     }
   },

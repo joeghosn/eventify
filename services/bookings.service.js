@@ -30,8 +30,14 @@ const bookingService={
           eventId,
           dateBooked: new Date(),
         });
+
+        await event.update({ isBooked: true });
       
-        return 'Event booked successfully';
+        return  {
+          status: 'success',
+          message: 'Event booked successfully',
+        };
+
       },
 
       getBookings: async (userId) => {
@@ -40,7 +46,14 @@ const bookingService={
           const bookings = await Bookings.findAll({
             where: {
               userId,
-            }
+            },
+            include: [
+              {
+                model: Event, // Include the Event model
+                as: 'event', // Alias for the association
+                attributes: ['eventId', 'name', 'description', 'city', 'street', 'building', 'seats', 'minimumAge', 'dressCode', 'price', 'status', 'userId'], // Select the attributes you need
+              },
+            ],
           });
     
           return {
@@ -87,8 +100,13 @@ const bookingService={
             eventId,
           },
         });
+
+        await event.update({ isBooked: false });
       
-        return 'Booking canceled successfully';
+        return {
+          status: 'success',
+          message: 'Event unbooked successfully',
+        };
       }
       
 }

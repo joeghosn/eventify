@@ -1,0 +1,65 @@
+<!-- Modal Container -->
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden">  
+    <div class="relative bg-white p-8 rounded shadow-md w-1/2 mx-auto h-full">
+        <button class="font-bold  absolute right-6 top-4" id="closeButton">&times;</button>
+        <form method="post" action="/api/v1/events" class="flex flex-col space-y-4 mt-4">
+            <%- include('input', { type: 'text', name: 'name', id: 'name', label: 'Name' }) %>
+            <%- include('input', { type: 'text', name: 'description', id: 'description', label: 'Description'}) %>
+            <div class="flex space-x-4">
+                <%- include('input', { type: 'date', name: 'date', id: 'date', label: 'Date'}) %>
+                <%- include('input', { type: 'time', name: 'time', id: 'time', label: 'Time' }) %>
+            </div>
+            <div class="flex space-x-4">
+                <%- include('input', { type: 'text', name: 'city', id: 'city', label: 'City' }) %>
+                <%- include('input', { type: 'text', name: 'street', id: 'street', label: 'Street'}) %>
+                <%- include('input', { type: 'text', name: 'building', id: 'building', label: 'Building'}) %>
+            </div>
+            <div class="flex space-x-4">
+                <%- include('input', { type: 'number', name: 'price', id: 'price', label: 'Price' }) %>
+                <%- include('input', { type: 'number', name: 'seats', id: 'seats', label: 'Seats' }) %>
+                <%- include('input', { type: 'number', name: 'minimumAge', id: 'minimumAge', label: 'Minimum Age'}) %>
+            </div>
+            <%- include('input', { type: 'text', name: 'dressCode', id: 'dressCode', label: 'Dress Code' }) %>
+            <div class="flex self-end">
+                <%- include('button', {id:'saveButton', type: 'Submit', text:'Save', variant:'normal'})%>
+      
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Get references to modal and buttons
+    const modal = document.getElementById('modal');
+    const openButton = document.getElementById('openButton');
+    const closeButton = document.getElementById('closeButton');
+    const saveButton = document.getElementById('saveButton');
+
+    // Function to open the modal
+    function openModal() {
+        modal.style.display = 'block';
+    }
+
+    // Function to close the modal
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+
+    // Event listeners
+    if(openButton){
+        openButton.addEventListener('click', openModal);
+    }
+    
+    closeButton.addEventListener('click', closeModal);
+    saveButton.addEventListener('click', closeModal);
+
+    // Close the modal if the user clicks outside of it
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+             closeModal();
+        }
+    });</script>
+
+
+
+

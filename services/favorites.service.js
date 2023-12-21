@@ -28,19 +28,31 @@ const favoritesService={
           userId,
           eventId,
         });
+
+        await event.update({ isFavorited: true });
       
-        return 'Event favorited successfully';
+        return  {
+          status: 'success',
+          message: 'Event favorited successfully',
+        };
       },
 
-      getFavorites: async (userId) => {
+      getFavorites : async (userId) => {
         try {
-          // Retrieve all events from the database
+          // Retrieve all favorites and include associated events
           const favorites = await Favorites.findAll({
-            where:{
+            where: {
               userId
-            }
+            },
+            include: [
+              {
+                model: Event, // Include the Event model
+                as: 'event', // Alias for the association
+                attributes: ['eventId', 'name', 'description', 'city', 'street', 'building', 'seats', 'minimumAge', 'dressCode', 'price', 'status', 'userId'], // Select the attributes you need
+              },
+            ],
           });
-    
+      
           return {
             status: 'success',
             data: {
@@ -56,7 +68,7 @@ const favoritesService={
           };
         }
       },
-
+      
       unfavoriteEvent: async(userId, eventId) =>{
         // Find the event to check if it exists before attempting to unfavorite
         const event = await Event.findByPk(eventId);
@@ -85,8 +97,13 @@ const favoritesService={
             eventId,
           },
         });
+
+        await event.update({ isFavorited: false });
       
-        return 'Event unfavorited successfully';
+        return {
+          status: 'success',
+          message: 'Event unfavorited successfully',
+        }
       } 
 }
 

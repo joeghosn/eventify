@@ -1,0 +1,45 @@
+<nav class="bg-blue-500 p-4">
+    <div class="container mx-auto flex items-center justify-between">
+        <a href="/api/v1/events" class="text-white text-2xl font-semibold">Eventify</a>
+
+        <!-- Navigation Links -->
+        <div class="space-x-4">
+            <% if (user && user.userRole === 'user') { %>
+                <a href="/api/v1/favorites" class="text-white">Favorites</a>
+                <a href="/api/v1/bookings" class="text-white">Bookings</a>
+            <% } %>
+            <a href="/api/v1/events" class="text-white">Events</a>
+            <button id="logoutButton"  class="text-blue-500 px-6 py-2 bg-white rounded-md">Logout</button>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Get references to buttons
+    const logoutButton = document.getElementById('logoutButton');
+    
+    // Event listeners
+    async function logout() {
+        try {
+            await fetch('http://localhost:3000/api/v1/auth/logout', {
+                method: 'POST',
+                credentials: 'include', // Include credentials (cookies) in the request
+            });
+            window.location.href="/api/v1/auth/sign-in"
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+        logoutButton.addEventListener('click', logout);
+
+
+</script>
+
+
+
+
+
+
+
+

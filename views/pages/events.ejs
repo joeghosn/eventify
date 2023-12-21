@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="min-h-screen">
+
+    <%-include('../components/navigation', {user})%>
+
+        <% if (events && events.length > 0) { %>
+            <% if(user && user.userRole==='planner') { %>
+                <div class="p-6">
+                    <%- include('../components/button', {id:'openButton', type: 'Submit', text:'Create Event', variant:'normal'})%>
+                </div>
+            <% }%>
+       
+            <div class=" p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
+                <% events.forEach(event => { %>
+                    <%- include('../components/card', { event: event }) %>
+                <% }); %>
+               
+            </div>
+       
+        <% } else { %>
+            <div class="h-screen flex items-center justify-center">
+                <% if (user && user.userRole === 'planner') { %>
+                    <div>
+                        <p class="text-2xl" >You have not created any event yet.</p>
+                        <div class="mt-6 flex justify-center">
+                            <%- include('../components/button', {id:'openButton', type: 'Submit', text:'Create Event', variant:'normal'})%>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <p class="text-2xl">There are no events available at this moment.</p>
+                <% } %>
+            </div>
+        <% } %>
+        <%-include('../components/modal')%>
+</body>
+
+</html>
+

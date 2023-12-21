@@ -4,41 +4,28 @@ const authorization = (allowedRoles) => {
   return async (req, res, next) => {
     try {
       // Extract the bearer token from the request headers
-      const token = req.headers.authorization;
-      console.log(token);
+      const token = req.cookies.token
 
       // Check if a token is provided
       if (!token) {
-        return res.status(401).json({
-          status: 'fail',
-          message: 'Unauthorized. Token not provided.',
-        });
+          return res.render('../views/pages/unauthorized');
       }
 
       // Verify the token
       jwt.verify(token, process.env.JWT_SECRET_KEY , async (err, decoded) => {
         if (err) {
-          return res.status(401).json({
-            status: 'fail',
-            message: 'Unauthorized. Invalid token.',
-          });
+          return res.render('../views/pages/unauthorized');
         }
-
-        
 
         // The decoded object contains the user information, including the role
         const userRole = decoded.role;
         const userId= decoded.userId;
-        console.log(userRole, userId)
 
         // Check if the user's role is allowed
         if (!allowedRoles.includes(userRole)) {
-          return res.status(403).json({
-            status: 'fail',
-            message: 'Forbidden. Insufficient permissions.',
-          });
+          return res.render('../views/pages/unauthorized')
+   
         }
-  
 
         //Attach user Id and role to the req object
         req.user={

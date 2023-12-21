@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center">
+  <div class="bg-white rounded shadow-md w-1/2">
+    <form class="flex flex-col space-y-4 p-8" method="POST" action="/api/v1/auth/sign-up">
+      <h2 class="text-2xl font-semibold mb-6">Sign Up</h2>
+        <%- include('../components/input', { type: 'text', name: 'firstName', id: 'firstName', label: 'First Name'  }) %>
+        <%- include('../components/input', { type: 'text', name: 'lastName', id: 'lastName', label: 'Last Name'  }) %>
+        <%- include('../components/input', { type: 'email', name: 'email', id: 'email', label: 'Email'  }) %>
+        <%- include('../components/input', { type: 'password', name: 'password', id: 'password', label: 'Password'  }) %>
+        <%- include('../components/input', { type: 'date', name: 'dateOfBirth', id: 'dateOfBirth', label: 'Date Of Birth'  }) %>
+        <%- include('../components/select', {
+          id: 'role',
+          name: 'role',
+          label: 'Role',
+          options: [
+            { value: 'user', label: 'Guest' },
+            { value: 'planner', label: 'Event Planner' },
+            { value: 'admin', label: 'Admin' }
+          ]
+        }) %>
+              <div class="mb-4 self-end">
+                <%- include('../components/button', {id: '', type: 'submit', text: 'Sign Up', variant:'normal' }) %>
+              </div>
+      </div>
+    </form>
+    <div class="my-4 flex items-center space-x-2 font-light text-sm"><p>Already have an account?</p><a href="/api/v1/auth/sign-in" class="cursor-pointer text-blue-500 underline">Sign in</a></div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<div>
+    <label class="block text-gray-600 text-sm font-semibold mb-2" for="<%= id %>"><%= label %></label>
+    <select class="border font-light border-gray-300 rounded-md  border-opacity-80 px-4 py-3 w-full block text-gray-600 text-sm font-semibold mb-2" id="<%= id %>" name="<%= name %>" required>
+      <% options.forEach(option => { %>
+        <option value="<%= option.value %>"><%= option.label %></option>
+      <% }) %>
+    </select>
+</div>
+  
+  
